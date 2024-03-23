@@ -16,7 +16,7 @@ const tasks = [
 function App() {
 	return (
 		<div className='App'>
-			<div class='todo'>
+			<div className='todo'>
 				<Header />
 				<TodoList data={tasks} />
 			</div>
@@ -41,20 +41,21 @@ function TodoList({ data }) {
 			<p className='error-info'>No tasks on the list</p>
 			<ul>
 				{data.map((el, i) => (
-					<Task task={el.task} key={i} />
+					<Task task={el.task} keyToList={i} key={i} />
 				))}
 			</ul>
 		</div>
 	)
 }
 
-function Task({ task, key }) {
+function Task({ task, keyToList }) {
 	return (
-		<li data-id={key}>
+		<li data-id={keyToList} key={keyToList}>
 			{task}
 			<div className='tools'>
 				<button className='complete'>✅</button>
 				<button className='edit'>EDIT</button>
+				<button className='delete'>❌</button>
 			</div>
 		</li>
 	)
