@@ -20,6 +20,7 @@ function App() {
 				<Header />
 				<TodoList data={tasks} />
 			</div>
+			<Popup />
 		</div>
 	)
 }
@@ -58,6 +59,20 @@ function Task({ task, keyToList }) {
 				<button className='delete'>❌</button>
 			</div>
 		</li>
+	)
+}
+
+function Popup() {
+	return (
+		<div className='popup'>
+			<h3>Edit Task:</h3>
+			<div className='popup-body'>
+				<p className='popup-info'></p>
+				<input type='text' className='popup-inout' placeholder='Enter new content of your task...' />
+				<button className='popup-btn accept'>Confirm</button>
+				<button className='popup-btn cancel'>cancel</button>
+			</div>
+		</div>
 	)
 }
 
