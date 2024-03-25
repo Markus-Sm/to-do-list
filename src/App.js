@@ -1,30 +1,25 @@
 import { useState } from 'react'
 
-// const initialTasks = [
-// 	{
-// 		task: 'Drink tea',
-// 		done: false,
-// 	},
-// 	{
-// 		task: 'Do some shopping',
-// 		done: false,
-// 	},
-// 	{
-// 		task: 'Walk the dog',
-// 		done: false,
-// 	},
-// 	{
-// 		task: 'Go throw out the trash',
-// 		done: false,
-// 	},
-// 	{
-// 		task: 'Go out',
-// 		done: false,
-// 	},
-// ]
+const initialTasks = [
+	{
+		id: 23123,
+		description: 'Drink tea',
+		done: false,
+	},
+	{
+		id: 5023121,
+		description: 'Do some shopping',
+		done: false,
+	},
+	{
+		id: 131311,
+		description: 'Walk the dog',
+		done: false,
+	},
+]
 
 function App() {
-	const [tasks, setTasks] = useState([])
+	const [tasks, setTasks] = useState(initialTasks)
 
 	function handleAddTasks(task) {
 		setTasks(tasks => [...tasks, task])
@@ -121,7 +116,7 @@ function Popup() {
 			<div className='popup-body'>
 				<p className='popup-info'></p>
 				<input type='text' className='popup-inout' placeholder='Enter new content of your task...' />
-				<button className='popup-btn accept'>Confirm !</button>
+				<button className='popup-btn accept'>Confirm</button>
 				<button className='popup-btn cancel'>cancel</button>
 			</div>
 		</div>
