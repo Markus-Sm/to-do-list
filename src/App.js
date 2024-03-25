@@ -121,7 +121,7 @@ function Popup() {
 			<div className='popup-body'>
 				<p className='popup-info'></p>
 				<input type='text' className='popup-inout' placeholder='Enter new content of your task...' />
-				<button className='popup-btn accept'>Confirm</button>
+				<button className='popup-btn accept'>Confirm !</button>
 				<button className='popup-btn cancel'>cancel</button>
 			</div>
 		</div>
