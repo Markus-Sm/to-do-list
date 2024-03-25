@@ -20,6 +20,9 @@ const initialTasks = [
 
 function App() {
 	const [tasks, setTasks] = useState(initialTasks)
+	const [showPopup, setShowPopup] = useState(false)
+	const [editTask, setEditTask] = useState(null)
+	const [editedDescription, setEditedDescription] = useState('')
 
 	function handleAddTasks(task) {
 		setTasks(tasks => [...tasks, task])
@@ -33,13 +36,36 @@ function App() {
 		setTasks(tasks => tasks.map(task => (task.id === id ? { ...task, done: !task.done } : task)))
 	}
 
+	function handleTogglePopup(task) {
+		setShowPopup(show => !show)
+		setEditTask(task)
+		setEditedDescription(task.description)
+	}
+
+	function handleEditedTask() {
+		setTasks(tasks => tasks.map(task => (task.id === editTask.id ? { ...task, description: editedDescription } : task)))
+		setShowPopup(false)
+	}
+
 	return (
 		<div className='App'>
 			<div className='todo'>
 				<Header onAddTasks={handleAddTasks} />
-				<TodoList tasks={tasks} data={tasks} onDeleteTask={handleDeleteItem} onCompleteTask={handleToggleTask} />
+				<TodoList
+					tasks={tasks}
+					onDeleteTask={handleDeleteItem}
+					onCompleteTask={handleToggleTask}
+					setPopup={handleTogglePopup}
+				/>
 			</div>
-			<Popup />
+			{showPopup && (
+				<Popup
+					description={editedDescription}
+					setDescription={setEditedDescription}
+					confirmEdit={handleEditedTask}
+					cancelEdit={() => setShowPopup(false)}
+				/>
+			)}
 		</div>
 	)
 }
@@ -78,29 +104,37 @@ function Header({ onAddTasks }) {
 	)
 }
 
-function TodoList({ data, onDeleteTask, onCompleteTask }) {
+function TodoList({ tasks, onDeleteTask, onCompleteTask, setPopup }) {
 	return (
 		<div className='todolist'>
 			<h3>Task List</h3>
-			{data >= 0 && <p className='error-info'>No tasks on the list</p>}
+			{tasks >= 0 && <p className='error-info'>No tasks on the list</p>}
 			<ul>
-				{data.map(task => (
-					<Task task={task} keyToList={task.id} key={task.id} onDeleteTask={onDeleteTask} onComplete={onCompleteTask} />
+				{tasks.map(task => (
+					<Task
+						task={task}
+						key={task.id}
+						onDeleteTask={onDeleteTask}
+						onComplete={onCompleteTask}
+						onEdit={() => setPopup(task)}
+					/>
 				))}
 			</ul>
 		</div>
 	)
 }
 
-function Task({ task, onDeleteTask, onComplete, keyToList }) {
+function Task({ task, onDeleteTask, onComplete, onEdit }) {
 	return (
-		<li data-id={keyToList} className={task.done ? 'completed' : ''}>
+		<li className={task.done ? 'completed' : ''}>
 			{task.description}
 			<div className='tools'>
 				<button onClick={() => onComplete(task.id)} className={task.done ? 'completed' : 'complete'}>
 					✅
 				</button>
-				<button className='edit'>EDIT</button>
+				<button onClick={onEdit} className='edit'>
+					EDIT
+				</button>
 				<button onClick={() => onDeleteTask(task.id)} className='delete'>
 					❌
 				</button>
@@ -109,15 +143,29 @@ function Task({ task, onDeleteTask, onComplete, keyToList }) {
 	)
 }
 
-function Popup() {
+function Popup({ description, setDescription, confirmEdit, cancelEdit }) {
+	function handleDescriptionChange(e) {
+		setDescription(e.target.value)
+	}
+
 	return (
 		<div className='popup'>
 			<h3>Edit Task:</h3>
 			<div className='popup-body'>
 				<p className='popup-info'></p>
-				<input type='text' className='popup-inout' placeholder='Enter new content of your task...' />
-				<button className='popup-btn accept'>Confirm</button>
-				<button className='popup-btn cancel'>cancel</button>
+				<input
+					type='text'
+					value={description}
+					onChange={handleDescriptionChange}
+					className='popup-input'
+					placeholder='Enter new content of your task...'
+				/>
+				<button onClick={confirmEdit} className='popup-btn accept'>
+					Confirm
+				</button>
+				<button onClick={cancelEdit} className='popup-btn cancel'>
+					cancel
+				</button>
 			</div>
 		</div>
 	)
