@@ -47,6 +47,12 @@ function App() {
 		setShowPopup(false)
 	}
 
+	function handleClearList() {
+		const confirmed = window.confirm('Are you sure you want to delete all task?')
+
+		if (confirmed) setTasks([])
+	}
+
 	return (
 		<div className='App'>
 			<div className='todo'>
@@ -56,6 +62,7 @@ function App() {
 					onDeleteTask={handleDeleteItem}
 					onCompleteTask={handleToggleTask}
 					setPopup={handleTogglePopup}
+					onClearList={handleClearList}
 				/>
 			</div>
 			{showPopup && (
@@ -104,13 +111,23 @@ function Header({ onAddTasks }) {
 	)
 }
 
-function TodoList({ tasks, onDeleteTask, onCompleteTask, setPopup }) {
+function TodoList({ tasks, onDeleteTask, onCompleteTask, setPopup, onClearList }) {
+	const [sortBy, setSortBy] = useState('input')
+
+	let sortedItems
+
+	if (sortBy === 'input') sortedItems = tasks
+
+	if (sortBy === 'description') sortedItems = tasks.slice().sort((a, b) => a.description.localeCompare(b.description))
+
+	if (sortBy === 'completed') sortedItems = tasks.slice().sort((a, b) => +a.done - +b.done)
+
 	return (
 		<div className='todolist'>
 			<h3>Task List</h3>
 			{tasks >= 0 && <p className='error-info'>No tasks on the list</p>}
 			<ul>
-				{tasks.map(task => (
+				{sortedItems.map(task => (
 					<Task
 						task={task}
 						key={task.id}
@@ -120,6 +137,17 @@ function TodoList({ tasks, onDeleteTask, onCompleteTask, setPopup }) {
 					/>
 				))}
 			</ul>
+
+			<div className='list'>
+				<div className='actions'>
+					<select value={sortBy} onChange={e => setSortBy(e.target.value)}>
+						<option value='input'>Sort by input order</option>
+						<option value='description'>Sort by description</option>
+						<option value='completed'>Sort by completed status</option>
+					</select>
+					<button onClick={onClearList}>Clear tasks</button>
+				</div>
+			</div>
 		</div>
 	)
 }
